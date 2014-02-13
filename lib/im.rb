@@ -5,7 +5,6 @@ module Im
   class << self
 
 	def send_message(message, chat)
-      puts chat
       puts "Sending '#{message}' to #{chat[:name]}"
       `osascript -e 'tell application "Messages" to send \"#{message}\" to item #{chat[:id].to_i} of text chats'`
 	end
