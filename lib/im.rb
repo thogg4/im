@@ -1,30 +1,25 @@
-require "im/version"
+require 'im/version'
 require 'appscript'
 
 module Im
   class << self
 
-	def is_i str
-      !!(str =~ /^[-+]?[0-9]+$/)
-	end
-
-	def send_message message, buddy
-      if is_i buddy
-        puts "Sending \'#{message}\'  to chat number #{buddy}"
-        `osascript -e 'tell application "Messages" to send \"#{message}\" to item #{buddy.to_i} of text chats'`
-      else
-        puts "Sending \'#{message}\' to buddy \'#{buddy}\'"
-        `osascript -e 'tell application "Messages" to send \"#{message}\" to buddy \"#{buddy}\"'`
-      end
+	def send_message(message, chat)
+      puts "Sending \'#{message}\' to #{chat[:name]}"
+      `osascript -e 'tell application "Messages" to send \"#{message}\" to item #{chat[:id].to_i} of text chats'`
 	end
 
 	def get_chat_list
-      imsg = Appscript.app("Messages")
-      participants = imsg.chats.participants.get()
+      im = Appscript.app("Messages")
+      participants = im.chats.participants.get()
       participants.map.with_index do |participant, index|
-        { id: index+1, name: participant.first.name.get(), object: participant.first }
+        { id: index+1, name: participant.first.name.get().lstrip, object: participant.first }
       end
 	end
+
+    def get_chat_from_number(chats, number)
+      chats.select { |chat| chat[:id] == number }
+    end
 
   end
 end

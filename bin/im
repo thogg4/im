@@ -19,11 +19,13 @@ def interact_with_user
   end
 
   # Gets the buddy name or number
-  puts '\nSend message to: (number or name)'
+  puts '\nSend message to: (number)'
   response = gets.chomp
 
-  # Send the message captured on the beggining to the selected buddy
-  Im.send_message str, response
+  chat = get_chat_from_number(chats, response)
+
+  # Send the message captured on the beginning to the selected buddy
+  Im.send_message str, chat
 end
 
 # Control+C trick in order to get out of command gracefully
