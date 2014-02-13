@@ -1,0 +1,36 @@
+#!/usr/bin/env ruby
+require 'im'
+
+def interact_with_user
+  # Gets the message and concatenate it into a string
+  str = ""
+  ARGV.each do |value|
+    str +=value+" "
+  end
+  str = str.chomp(' ');
+  ARGV.clear
+  STDOUT.flush
+
+  # Show the chat list with the buddies names
+  chats = Im.get_chat_list
+
+  chats.each do |chat|
+    puts "#{chat[:id]}: #{chat[:name]}"
+  end
+
+  # Gets the buddy name or number
+  puts '\nSend message to: (number or name)'
+  response = gets.chomp
+
+  # Send the message captured on the beggining to the selected buddy
+  Im.send_message str, response
+end
+
+# Control+C trick in order to get out of command gracefully
+trap("SIGINT") { throw :ctrl_c }
+catch :ctrl_c do
+  begin
+    interact_with_user
+  rescue Exception
+  end
+end
